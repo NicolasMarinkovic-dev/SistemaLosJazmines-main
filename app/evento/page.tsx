@@ -7,10 +7,14 @@ import { useStore } from "@/lib/store-context"
 import {
   type Evento,
   type EventoGuardado,
+  type ServicioEvento,
+  type EstadoEvento,
   generateId,
   getCompatibleRecipeUnits,
   getDefaultRecipeUnit,
   normalizeToStockUnit,
+  calcularTotalesPaquete,
+  getPrecioVenta,
 } from "@/lib/store"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
