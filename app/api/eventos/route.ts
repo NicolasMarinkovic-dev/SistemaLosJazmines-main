@@ -24,17 +24,17 @@ function toRow(ev: Record<string, unknown>) {
     recetas_adolescentes: (ev.recetasAdolescentes as string[]) || [],
     recetas_ninos: (ev.recetasNinos as string[]) || [],
     recetas_dietas_especiales: (ev.recetasDietasEspeciales as string[]) || [],
-    multipliers_adultos: JSON.stringify(ev.multipliersAdultos || {}),
-    multipliers_adolescentes: JSON.stringify(ev.multipliersAdolescentes || {}),
-    multipliers_ninos: JSON.stringify(ev.multipliersNinos || {}),
-    multipliers_dietas_especiales: JSON.stringify(ev.multipliersDietasEspeciales || {}),
+    multipliers_adultos: ev.multipliersAdultos || {},
+    multipliers_adolescentes: ev.multipliersAdolescentes || {},
+    multipliers_ninos: ev.multipliersNinos || {},
+    multipliers_dietas_especiales: ev.multipliersDietasEspeciales || {},
     descripcion_personalizada: (ev.descripcionPersonalizada as string) || "",
-    barras: JSON.stringify(ev.barras || []),
-    servicios: JSON.stringify(ev.servicios || []),
+    barras: ev.barras || [],
+    servicios: ev.servicios || [],
     paquetes_seleccionados: (ev.paquetesSeleccionados as string[]) || [],
     condicion_iva: (ev.condicionIva as string) || null,
-    contrato: JSON.stringify(ev.contrato || null),
-    plan_de_cuotas: JSON.stringify(ev.planDeCuotas || null),
+    contrato: ev.contrato || null,
+    plan_de_cuotas: ev.planDeCuotas || null,
     estado: (ev.estado as string) || "pendiente",
     color_tag: (ev.colorTag as string) || null,
     precio_venta: (ev.precioVenta as number) || null,
@@ -43,9 +43,9 @@ function toRow(ev: Record<string, unknown>) {
     costo_servicios: (ev.costoServicios as number) || null,
     costo_operativo: (ev.costoOperativo as number) || null,
     notas_internas: (ev.notasInternas as string) || null,
-    pagos: JSON.stringify(ev.pagos || []),
-    asignaciones: JSON.stringify(ev.asignaciones || []),
-    costos_calculados: JSON.stringify(ev.costosCalculados || null),
+    pagos: ev.pagos || [],
+    asignaciones: ev.asignaciones || [],
+    costos_calculados: ev.costosCalculados || null,
     stock_descontado: (ev.stockDescontado as boolean) || false,
     fecha_impresion: (ev.fechaImpresion as string) || null,
   }
@@ -124,7 +124,7 @@ export async function GET() {
     return NextResponse.json(rows.map(fromRow))
   } catch (err) {
     console.error("[API] Error fetching eventos:", err)
-    return NextResponse.json([], { status: 200 })
+    return NextResponse.json({ error: "Error al obtener eventos" }, { status: 500 })
   }
 }
 

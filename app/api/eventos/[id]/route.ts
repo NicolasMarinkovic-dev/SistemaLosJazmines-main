@@ -113,12 +113,6 @@ export async function PATCH(req: Request, { params }: { params: Promise<{ id: st
       stockDescontado: "stock_descontado", fechaImpresion: "fecha_impresion",
     }
 
-    const jsonFields = new Set([
-      "barras","servicios","contrato","planDeCuotas","pagos","asignaciones",
-      "costosCalculados","multipliersAdultos","multipliersAdolescentes",
-      "multipliersNinos","multipliersDietasEspeciales",
-    ])
-
     const setClauses: string[] = []
     const values: unknown[] = []
     let idx = 1
@@ -127,7 +121,8 @@ export async function PATCH(req: Request, { params }: { params: Promise<{ id: st
       if (!(camel in updates)) continue
       const val = updates[camel]
       setClauses.push(`${snake} = $${idx}`)
-      values.push(jsonFields.has(camel) ? JSON.stringify(val) : val)
+      // Pass values directly - Postgres driver handles JSONB serialization natively
+      values.push(val)
       idx++
     }
 
@@ -178,16 +173,16 @@ export async function PUT(req: Request, { params }: { params: Promise<{ id: stri
         ev.tipoEvento||null, ev.nombrePareja||null, ev.dniNovio1||null, ev.dniNovio2||null,
         ev.adultos||0, ev.adolescentes||0, ev.ninos||0, ev.personasDietasEspeciales||0,
         ev.recetasAdultos||[], ev.recetasAdolescentes||[], ev.recetasNinos||[], ev.recetasDietasEspeciales||[],
-        JSON.stringify(ev.multipliersAdultos||{}), JSON.stringify(ev.multipliersAdolescentes||{}),
-        JSON.stringify(ev.multipliersNinos||{}), JSON.stringify(ev.multipliersDietasEspeciales||{}),
-        ev.descripcionPersonalizada||"", JSON.stringify(ev.barras||[]), JSON.stringify(ev.servicios||[]),
+        ev.multipliersAdultos||{}, ev.multipliersAdolescentes||{},
+        ev.multipliersNinos||{}, ev.multipliersDietasEspeciales||{},
+        ev.descripcionPersonalizada||"", ev.barras||[], ev.servicios||[],
         ev.paquetesSeleccionados||[],
-        ev.condicionIva||null, JSON.stringify(ev.contrato||null), JSON.stringify(ev.planDeCuotas||null),
+        ev.condicionIva||null, ev.contrato||null, ev.planDeCuotas||null,
         ev.estado||"pendiente", ev.colorTag||null,
         ev.precioVenta||null, ev.costoPersonal||null, ev.costoInsumos||null,
         ev.costoServicios||null, ev.costoOperativo||null,
-        ev.notasInternas||null, JSON.stringify(ev.pagos||[]),
-        JSON.stringify(ev.asignaciones||[]), JSON.stringify(ev.costosCalculados||null),
+        ev.notasInternas||null, ev.pagos||[],
+        ev.asignaciones||[], ev.costosCalculados||null,
         ev.stockDescontado||false, ev.fechaImpresion||null,
         id,
       ]
