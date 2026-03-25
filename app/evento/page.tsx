@@ -11,6 +11,7 @@ import {
   getCompatibleRecipeUnits,
   getDefaultRecipeUnit,
   normalizeToStockUnit,
+  calcularComprasSegmentadas,
 } from "@/lib/store"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
